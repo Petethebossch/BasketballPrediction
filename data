@@ -32,3 +32,34 @@ print(dataframes)
 datanames = list(dataframes.keys())
 for x in range(0,len(dataframes.keys())):
     print(datanames[x])
+
+maleGames = pd.DataFrame()
+maleGames = pd.concat([dataframes["MRegularSeasonDetailedResults"],dataframes["MNCAATourneyDetailedResults"]], ignore_index=True)
+pd.set_option('display.max_columns', 500)
+maleGames["CityID"] = 0
+for x in range(34074,len(maleGames)):
+    print(x)
+    done = 0
+    currGame = maleGames.iloc[x]
+    hi = len(dataframes["MGameCities"])
+    lo = 0
+    if(currGame["Season"]>2009):
+        while(not done and hi != lo):
+            mid = int((hi+lo)/2)
+            if(currGame["Season"]>dataframes["MGameCities"].iloc[mid]["Season"]):
+                lo = mid
+            elif(currGame["Season"]<dataframes["MGameCities"].iloc[mid]["Season"]):
+                hi = mid
+            else:
+                if(currGame["DayNum"]>dataframes["MGameCities"].iloc[mid]["DayNum"]):
+                    lo = mid
+                elif(currGame["DayNum"]<dataframes["MGameCities"].iloc[mid]["DayNum"]):
+                    hi = mid
+                else:
+                    if(currGame["WTeamID"]>dataframes["MGameCities"].iloc[mid]["WTeamID"]):
+                        lo = mid
+                    elif(currGame["WTeamID"]<dataframes["MGameCities"].iloc[mid]["WTeamID"]):
+                        hi = mid
+                    else:
+                        maleGames.loc[x, "CityID"] = dataframes["MGameCities"].iloc[mid]["CityID"]
+                        done = 1
