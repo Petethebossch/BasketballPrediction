@@ -63,3 +63,25 @@ for x in range(34074,len(maleGames)):
                     else:
                         maleGames.loc[x, "CityID"] = dataframes["MGameCities"].iloc[mid]["CityID"]
                         done = 1
+
+
+# Create a dictionary to store teams and their games
+teams = {}
+
+# Loop through maleGames DataFrame
+for x in range(len(maleGames)):
+    print(x)
+    win_team = maleGames.iloc[x]["WTeamID"]
+    lose_team = maleGames.iloc[x]["LTeamID"]
+    
+    # Add winning team to the dictionary if not already present
+    if win_team not in teams:
+        teams[win_team] = pd.DataFrame(columns=maleGames.columns)
+    
+    # Add losing team to the dictionary if not already present
+    if lose_team not in teams:
+        teams[lose_team] = pd.DataFrame(columns=maleGames.columns)
+    
+    # Append the game to the respective team's DataFrame
+    teams[win_team] = pd.concat([teams[win_team], maleGames.iloc[[x]]], ignore_index=True)
+    teams[lose_team] = pd.concat([teams[lose_team], maleGames.iloc[[x]]], ignore_index=True)
